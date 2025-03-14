@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   web:
@@ -6,30 +7,41 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-    command: python manage.py runserver 0.0.0.0:8000
-    
+    env_file:
+      - .env  # Charger les variables d'environnement depuis .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy  # Attendre que PostgreSQL soit prêt
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn project.wsgi:application --bind 0.0.0.0:8000"
+
   db:
     image: postgres:17
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Yosra1103*/
-      POSTGRES_DB: db_django_flutter
+    restart: always
+    env_file:
+      - .env  # Charger les variables d'environnement depuis .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+
   pgloader:
     image: dimitri/pgloader
     volumes:
-      - ./data:/data              # Monte le dossier contenant db.sqlite3
+      - ./data:/data
     networks:
       - default
     command: >
       sh -c "sleep 10 && pgloader /data/migrate.load"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
 volumes:
   postgres_data:
 
