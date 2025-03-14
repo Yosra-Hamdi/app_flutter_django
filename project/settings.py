@@ -139,10 +139,10 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  'db_django_flutter',
-        'USER': 'postgres', 
-        'PASSWORD': 'Yosra1103*/',
-        'HOST': 'db',
+        'NAME':  'my_db_django',
+        'USER': 'yosra', 
+        'PASSWORD': '4Lz7Rg2kM0OMdn60lwwlvP1pYkfg4o9m',
+        'HOST': 'dpg-cva325an91rc738v5lqg-a',
         'PORT': '5432',  # Port par défaut de PostgreSQL
     }
 }
@@ -182,7 +182,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+SSTATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
 
