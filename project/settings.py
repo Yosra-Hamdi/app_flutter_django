@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from dotenv import load_dotenv
 from decouple import config  # Pour lire les variables d'environnement
-
+import dj_database_url
 from pathlib import Path
 
 
@@ -23,6 +23,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_path = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path)
+
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')  # Valeur par défaut : 'local'
+
+if ENVIRONMENT == 'render':
+    dotenv_path = os.path.join(BASE_DIR, '.env.render')
+else:
+    dotenv_path = os.path.join(BASE_DIR, '.env.local')
+
+load_dotenv(dotenv_path)
+
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
+
+# Configuration de la base de données PostgreSQL
+
+DATABASES = {
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
+}
+
 
 
 # Charger les variables d'environnement depuis .env
@@ -37,8 +57,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
 # Debugging : Vérifier si les variables sont bien chargées
-print("EMAIL_HOST_USER:", EMAIL_HOST_USER)
-print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
+
 
 
 
@@ -47,7 +66,6 @@ print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ondihgkix58u(acq(*mu$wa)9_qc=tz_d$=rfvnppk7a0nvn8q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -86,7 +104,10 @@ INSTALLED_APPS = [
 
 ]
 
+
+CORS_ALLOW_ALL_ORIGINS = True
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -136,15 +157,6 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
-
-# Configuration de la base de données PostgreSQL
-import dj_database_url
-DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
-}
 
 
 # Password validation

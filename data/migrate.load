@@ -1,6 +1,6 @@
 load database
     from sqlite:///data/db.sqlite3
-    into postgresql://postgres:Yosra1103*/@db/db_django_flutter 
+    into postgresql://postgres:Yosra1103*//@db/db_django_flutter 
 
 
 with include drop, create tables, create indexes, reset sequences
