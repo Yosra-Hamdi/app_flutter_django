@@ -24,24 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path)
 
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')  # Valeur par défaut : 'local'
 
-if ENVIRONMENT == 'render':
-    dotenv_path = os.path.join(BASE_DIR, '.env.render')
-else:
-    dotenv_path = os.path.join(BASE_DIR, '.env.local')
 
-load_dotenv(dotenv_path)
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 # Configuration de la base de données PostgreSQL
 
-DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
-}
+
 
 
 
@@ -58,7 +47,8 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Debugging : Vérifier si les variables sont bien chargées
 
-
+print("EMAIL_HOST_USER:", EMAIL_HOST_USER)
+print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
 
 
 
@@ -66,9 +56,10 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-ondihgkix58u(acq(*mu$wa)9_qc=tz_d$=rfvnppk7a0nvn8q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -105,7 +96,6 @@ INSTALLED_APPS = [
 ]
 
 
-CORS_ALLOW_ALL_ORIGINS = True
 MIDDLEWARE = [
     
     'django.middleware.security.SecurityMiddleware',
@@ -157,6 +147,17 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'db_django'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'Yosra'),
+        'HOST': os.getenv('POSTGRES_HOST', 'db'),  # Nom du service dans docker-compose
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+    }
+}
 
 
 # Password validation
