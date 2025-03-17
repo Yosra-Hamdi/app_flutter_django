@@ -62,11 +62,7 @@ SECRET_KEY = 'django-insecure-ondihgkix58u(acq(*mu$wa)9_qc=tz_d$=rfvnppk7a0nvn8q
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = [
-    'app-flutter-django.onrender.com',
-    'localhost',  # Pour le développement local
-    '127.0.0.1',  # Pour le développement local
-]
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
@@ -102,7 +98,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-   
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
