@@ -59,7 +59,8 @@ print("EMAIL_HOST_PASSWORD:", EMAIL_HOST_PASSWORD)
 SECRET_KEY = 'django-insecure-ondihgkix58u(acq(*mu$wa)9_qc=tz_d$=rfvnppk7a0nvn8q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
@@ -148,15 +149,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'db_django'),
-        'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'Yosra'),
-        'HOST': os.getenv('POSTGRES_HOST', 'db'),  # Nom du service dans docker-compose
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL', 'postgres://postgres:Yosra@db:5432/db_django')
+    )
 }
 
 
